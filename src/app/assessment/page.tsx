@@ -10,10 +10,13 @@ import { NameForm } from "@/components/assessment/NameForm";
 import { QuestionCard } from "@/components/assessment/QuestionCard";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 
+const questionsById = Object.fromEntries(questions.map((q) => [q.id, q]));
+
 export default function AssessmentPage() {
   const router = useRouter();
   const { state, setName, selectAnswer, goBack, setPhase } = useAssessment();
-  const currentQuestion = questions[state.currentIndex];
+  const currentQuestionId = state.questionOrder[state.currentIndex];
+  const currentQuestion = questionsById[currentQuestionId] ?? questions[0];
   const submittingRef = useRef(false);
 
   const handleSelect = useCallback(

@@ -1,6 +1,7 @@
 "use client";
 
 import { useReducer, useEffect, useCallback } from "react";
+import { questions } from "@/lib/questions";
 
 export type Phase = "name" | "questions" | "submitting" | "complete";
 
@@ -10,6 +11,7 @@ interface AssessmentState {
   userEmail: string;
   currentIndex: number;
   answers: Record<number, "A" | "B">;
+  questionOrder: number[];
   _initialized: boolean;
 }
 
@@ -23,12 +25,26 @@ type Action =
 
 const STORAGE_KEY = "assessment_progress";
 
+function shuffleArray<T>(arr: T[]): T[] {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function newQuestionOrder(): number[] {
+  return shuffleArray(questions.map((q) => q.id));
+}
+
 const initialState: AssessmentState = {
   phase: "name",
   userName: "",
   userEmail: "",
   currentIndex: 0,
   answers: {},
+  questionOrder: [],
   _initialized: false,
 };
 
@@ -54,7 +70,7 @@ function reducer(state: AssessmentState, action: Action): AssessmentState {
     case "SET_PHASE":
       return { ...state, phase: action.phase };
     case "RESET":
-      return { ...initialState, _initialized: true };
+      return { ...initialState, questionOrder: newQuestionOrder(), _initialized: true };
     default:
       return state;
   }
@@ -90,9 +106,13 @@ function createInitialState(): AssessmentState {
 
   const saved = loadFromStorage();
   if (saved && saved.phase && saved.phase !== "complete" && saved.phase !== "submitting") {
-    return { ...initialState, ...saved, _initialized: true };
+    // Restore saved state; ensure questionOrder exists (backwards compat)
+    const order = saved.questionOrder && saved.questionOrder.length === 40
+      ? saved.questionOrder
+      : newQuestionOrder();
+    return { ...initialState, ...saved, questionOrder: order, _initialized: true };
   }
-  return { ...initialState, _initialized: true };
+  return { ...initialState, questionOrder: newQuestionOrder(), _initialized: true };
 }
 
 export function useAssessment() {
