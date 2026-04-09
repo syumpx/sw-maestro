@@ -17,8 +17,9 @@ export function QuestionCard({ question, selected, onSelect, index }: QuestionCa
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -30 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.25 }}
       className="flex w-full flex-col items-center gap-8"
+      style={{ pointerEvents: "auto" }}
     >
       <div className="text-center">
         <span className="mb-2 block text-sm font-medium text-primary">

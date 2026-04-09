@@ -111,7 +111,7 @@ export default function AssessmentPage() {
             <div className="w-full max-w-md">
               <ProgressBar current={answeredCount} total={40} />
             </div>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               <QuestionCard
                 key={currentQuestion.id}
                 question={currentQuestion}
