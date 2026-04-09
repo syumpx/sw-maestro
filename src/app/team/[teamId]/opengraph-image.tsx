@@ -28,8 +28,6 @@ export default async function Image({ params }: { params: { teamId: string } }) 
   }
 
   const plotSize = 350;
-  const plotX = 80;
-  const plotY = 100;
 
   return new ImageResponse(
     <div

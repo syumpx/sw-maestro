@@ -62,7 +62,7 @@ function reducer(state: AssessmentState, action: Action): AssessmentState {
 
 function saveToStorage(state: AssessmentState) {
   try {
-    const { _initialized, ...data } = state;
+    const { _initialized: _, ...data } = state;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch {}
 }
