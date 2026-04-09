@@ -9,6 +9,7 @@ import { MemberList } from "@/components/team/MemberList";
 import { InviteLink } from "@/components/team/InviteLink";
 import { Button } from "@/components/ui/Button";
 import { COLORS } from "@/lib/constants";
+import { trackEvent } from "@/lib/analytics";
 
 export default function TeamPage() {
   const params = useParams();
@@ -37,8 +38,8 @@ export default function TeamPage() {
 
   const dots: Dot[] = data.members.map((m, i) => ({
     name: m.name,
-    x: m.activeScore,
-    y: m.structuredScore,
+    x: m.structuredScore,
+    y: m.activeScore,
     color: COLORS.dots[i % COLORS.dots.length],
     id: m.id,
   }));
@@ -49,6 +50,7 @@ export default function TeamPage() {
 
   function handleDownload() {
     if (captureRef.current) {
+      trackEvent("image_download", { teamId, context: "team" });
       download(captureRef.current, `team-${teamId.slice(0, 8)}.png`);
     }
   }

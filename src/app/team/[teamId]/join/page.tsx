@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import { trackEvent } from "@/lib/analytics";
 
 export default function JoinTeamPage() {
   const params = useParams();
@@ -19,6 +20,7 @@ export default function JoinTeamPage() {
         if (!res.ok) throw new Error();
         const data = await res.json();
         setTeamName(data.team.name);
+        trackEvent("team_invite_view", { teamId });
       } catch {
         setError(true);
       } finally {
@@ -29,6 +31,7 @@ export default function JoinTeamPage() {
   }, [teamId]);
 
   function handleJoin() {
+    trackEvent("team_join", { teamId });
     try {
       localStorage.setItem("pending_team_id", teamId);
     } catch {}

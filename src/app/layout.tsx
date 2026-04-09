@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { TrackPageView } from "@/components/analytics/TrackPageView";
 import "./globals.css";
 
 const pretendard = localFont({
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${pretendard.variable} font-pretendard antialiased`}>
+        <TrackPageView />
         {children}
       </body>
     </html>

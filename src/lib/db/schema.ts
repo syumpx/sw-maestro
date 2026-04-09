@@ -26,5 +26,24 @@ export const results = pgTable(
   })
 );
 
+export const events = pgTable(
+  "events",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    name: text("name").notNull(),
+    properties: jsonb("properties"),
+    sessionId: text("session_id"),
+    referrer: text("referrer"),
+    userAgent: text("user_agent"),
+    pathname: text("pathname"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => ({
+    nameIdx: index("events_name_idx").on(table.name),
+    createdAtIdx: index("events_created_at_idx").on(table.createdAt),
+  })
+);
+
 export type Team = typeof teams.$inferSelect;
 export type Result = typeof results.$inferSelect;
+export type Event = typeof events.$inferSelect;

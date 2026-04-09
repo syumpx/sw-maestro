@@ -1,6 +1,16 @@
 import { eq } from "drizzle-orm";
 import { db } from ".";
-import { results, teams } from "./schema";
+import { events, results, teams } from "./schema";
+
+export function trackServerEvent(
+  name: string,
+  properties?: Record<string, unknown>
+) {
+  db.insert(events)
+    .values({ name, properties: properties ?? null })
+    .then(() => {})
+    .catch((err) => console.error("Failed to track event:", err));
+}
 
 export async function createResult(data: {
   name: string;

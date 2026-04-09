@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createTeam } from "@/lib/db/queries";
+import { createTeam, trackServerEvent } from "@/lib/db/queries";
 
 export async function POST(request: Request) {
   try {
@@ -10,6 +10,7 @@ export async function POST(request: Request) {
     }
 
     const team = await createTeam({ name, createdBy });
+    trackServerEvent("team_create", { teamId: team.id, createdBy });
     return NextResponse.json(team);
   } catch (error) {
     console.error("Failed to create team:", error);

@@ -9,6 +9,7 @@ import { questions } from "@/lib/questions";
 import { NameForm } from "@/components/assessment/NameForm";
 import { QuestionCard } from "@/components/assessment/QuestionCard";
 import { ProgressBar } from "@/components/ui/ProgressBar";
+import { trackEvent } from "@/lib/analytics";
 
 const questionsById = Object.fromEntries(questions.map((q) => [q.id, q]));
 
@@ -102,7 +103,10 @@ export default function AssessmentPage() {
           <NameForm
             initialName={state.userName}
             initialEmail={state.userEmail}
-            onSubmit={setName}
+            onSubmit={(name, email) => {
+              trackEvent("assessment_start");
+              setName(name, email);
+            }}
           />
         )}
 

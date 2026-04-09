@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createResult } from "@/lib/db/queries";
+import { createResult, trackServerEvent } from "@/lib/db/queries";
 import { calculateScores, questions } from "@/lib/questions";
 
 export async function POST(request: Request) {
@@ -33,6 +33,8 @@ export async function POST(request: Request) {
       answers,
       teamId: teamId || undefined,
     });
+
+    trackServerEvent("assessment_complete", { resultId: result.id, teamId: result.teamId });
 
     return NextResponse.json({
       id: result.id,

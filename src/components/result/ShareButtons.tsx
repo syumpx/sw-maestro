@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/Button";
 import { useDownloadImage } from "@/hooks/useDownloadImage";
+import { trackEvent } from "@/lib/analytics";
 
 interface ShareButtonsProps {
   resultId: string;
@@ -19,6 +20,7 @@ export function ShareButtons({ resultId, captureRef, showTeamButton = true, show
   async function handleCopyLink() {
     const url = `${window.location.origin}/result/${resultId}`;
     await navigator.clipboard.writeText(url);
+    trackEvent("share_link", { resultId });
     setCopied(true);
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => setCopied(false), 2000);
@@ -26,6 +28,7 @@ export function ShareButtons({ resultId, captureRef, showTeamButton = true, show
 
   function handleDownload() {
     if (captureRef.current) {
+      trackEvent("image_download", { resultId, context: "result" });
       download(captureRef.current, `personality-${resultId.slice(0, 8)}.png`);
     }
   }
@@ -52,6 +55,7 @@ export function ShareButtons({ resultId, captureRef, showTeamButton = true, show
         <Button
           variant="ghost"
           onClick={() => {
+            trackEvent("retake", { resultId });
             try { localStorage.removeItem("assessment_progress"); } catch {}
             window.location.href = "/assessment";
           }}
