@@ -62,7 +62,8 @@ function reducer(state: AssessmentState, action: Action): AssessmentState {
 
 function saveToStorage(state: AssessmentState) {
   try {
-    const { _initialized: _, ...data } = state;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _initialized, ...data } = state;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch {}
 }
